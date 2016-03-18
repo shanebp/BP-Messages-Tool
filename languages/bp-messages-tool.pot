@@ -1,0 +1,108 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bpmt\n"
+"POT-Creation-Date: 2015-12-10 16:20-0800\n"
+"PO-Revision-Date: 2015-12-10 16:22-0800\n"
+"Last-Translator: \n"
+"Language-Team: PhiloPress\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: __;gettext;gettext_noop;_e;_n:1,2;_x:1,2c;_\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../bpmt.php:15
+msgid "BP Messages Tool"
+msgstr ""
+
+#: ../bpmt.php:56
+msgid "Enter a Member's login name or user id: "
+msgstr ""
+
+#: ../bpmt.php:64
+msgid "Inbox"
+msgstr ""
+
+#: ../bpmt.php:64
+msgid "Sent"
+msgstr ""
+
+#: ../bpmt.php:66
+msgid "Go"
+msgstr ""
+
+#: ../bpmt.php:85
+msgid ""
+"<div class='error below-h2'>ERROR -  Please enter a Member's login name or "
+"user id.</div>"
+msgstr ""
+
+#: ../bpmt.php:94
+msgid "<div class='error below-h2'>ERROR - There was a problem.</div>"
+msgstr ""
+
+#: ../bpmt.php:114
+#, php-format
+msgctxt "bpmt"
+msgid ""
+"<div class=\"error below-h2\">ERROR - Member could not be found for: %s </"
+"div>"
+msgstr ""
+
+#: ../bpmt.php:137
+msgid ""
+"<div class='error below-h2'>ERROR -  Member could not be found via "
+"pagination.</div>"
+msgstr ""
+
+#: ../bpmt.php:162
+msgid ""
+"<div class='error below-h2'>ERROR - Message Thread could not be found.</div>"
+msgstr ""
+
+#: ../bpmt.php:205
+msgid "<div class='updated below-h2'>Message Thread was deleted.</div>"
+msgstr ""
+
+#: ../bpmt.php:208
+msgid ""
+"<div class='error below-h2'>ERROR - There was a problem deleting that "
+"Message Thread.</div>"
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:44
+msgid "Participants / Meta"
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:45
+msgid "Threads"
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:46
+#: ../templates/bpmt-messages-loop.php:69
+msgid "Delete"
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:57
+msgid "Message Count: "
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:63
+msgid "View Thread"
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:69
+msgid "Are you sure you want to Delete this Message Thread?"
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:69
+msgid "Delete Thread"
+msgstr ""
+
+#: ../templates/bpmt-messages-loop.php:96
+msgid "Sorry, no messages were found for that member."
+msgstr ""
