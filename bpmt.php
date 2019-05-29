@@ -39,11 +39,39 @@ function bpmt_screen() {
 
 			}
 		}
+		elseif( is_super_admin() ) {
+
+			bpmt_last_ten();
+		}
 		?>
 	</div>
 <?php
 }
 
+function bpmt_last_ten() {
+	global $wpdb;
+
+	//$last_ten = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}bp_messages_messages ORDER BY date_sent DESC LIMIT 10" );
+
+	$last_ten = $wpdb->get_results(
+		"SELECT m.thread_id, m.sender_id, m.subject, m.message, m.date_sent, r.user_id AS receip_id
+		FROM {$wpdb->prefix}bp_messages_messages AS m
+		INNER JOIN {$wpdb->prefix}bp_messages_recipients AS r ON m.thread_id = r.thread_id
+		WHERE r.sender_only = 0
+		ORDER BY m.date_sent DESC LIMIT 10"
+		);
+
+	if ( $last_ten ) {
+
+		include_once( dirname( 	__FILE__ ) . '/templates/bpmt-messages-last-ten.php' );
+
+	} else {
+
+		_e( 'No private BuddyPress messages were found', 'bpmt' );
+
+	}
+
+}
 
 function bpmt_form() {
 ?>
@@ -87,8 +115,8 @@ function bpmt_get_member() {
 		}
 	}
 
-	elseif( isset( $_GET['user'] ) )
-		$bpmt_user = $_GET['user'];
+	elseif( isset( $_GET['user_id'] ) )
+		$bpmt_user = intval( $_GET['user_id'] );
 
 	else {
 		_e("<div class='error below-h2'>ERROR - There was a problem.</div>", 'bpmt');
@@ -120,7 +148,7 @@ function bpmt_get_member() {
 function bpmt_get_member_page() {
 	global $bpmt_user_data;
 
-	$bpmt_user_data = bpmt_get_user_data( $_GET['user'] );
+	$bpmt_user_data = bpmt_get_user_data( $_GET['user_id'] );
 
 	if( $bpmt_user_data != NULL ) {
 
@@ -142,7 +170,7 @@ function bpmt_get_member_page() {
 function bpmt_get_thread_view() {
 	global $bpmt_user_data;
 
-	$bpmt_user_data = bpmt_get_user_data( $_GET['user'] );
+	$bpmt_user_data = bpmt_get_user_data( $_GET['user_id'] );
 
 	if( $bpmt_user_data != NULL ) {
 
@@ -181,6 +209,20 @@ function bpmt_delete_thread() {
 	  */
 
 	$thread_id = intval( $_GET['thread_id'] );
+	$user_id = intval( $_GET['user_id'] );
+
+/*
+	// only deletes one side of conversation
+
+	$deletion = messages_delete_thread( $thread_id, $user_id );
+
+	if ( $deletion ) {
+		_e("<div class='updated below-h2'>Message Thread was deleted.</div>", 'bpmt');
+	} else {
+		_e("<div class='error below-h2'>ERROR - There was a problem deleting that Message Thread.</div>", 'bpmt');
+	}
+*/
+
 
 	$bp = buddypress();
 
@@ -207,7 +249,10 @@ function bpmt_delete_thread() {
 	else
 		_e("<div class='error below-h2'>ERROR - There was a problem deleting that Message Thread.</div>", 'bpmt');
 
-	do_action( 'messages_delete_thread', $_GET['thread_id'] );
+
+
+	// do_action( 'messages_delete_thread', $thread_id, $user_id );
+
 
 	bpmt_get_member();
 }
@@ -249,7 +294,7 @@ function bpmt_view_delete_back_link( $type ) {
 	else
 		$mpage = '&mpage=1';
 
-	$user_id = '&user=' . $bpmt_user_data->ID;
+	$user_id = '&user_id=' . $bpmt_user_data->ID;
 
 	$box = '&box=' . $bpmt_user_data->box;
 
@@ -283,7 +328,7 @@ function bpmt_pagination ( $pag_links ) {
 
 	if( $_GET['page'] = 'bp-messages-tool' ) {
 
-		$rep = 'member-threads&user=' . $bpmt_user_data->ID . '&box=' . $bpmt_user_data->box;
+		$rep = 'member-threads&user_id=' . $bpmt_user_data->ID . '&box=' . $bpmt_user_data->box;
 
 		$pag_links = str_replace( 'select-member', $rep, $pag_links );
 

@@ -1,12 +1,12 @@
 === BP Messages Tool ===
 Contributors: shanebp
-Donate link: http://www.philopress.com/donate/
+Donate link: https://www.philopress.com/donate/
 Tags: buddypress, messages
-Author URI: http://philopress.com/contact/
-Plugin URI: http://philopress.com/products/
+Author URI: https://philopress.com/contact/
+Plugin URI: https://philopress.com/products/
 Requires at least: WP 4.0
-Tested up to: WP 4.4
-Stable tag: 1.2
+Tested up to: WP 5.1
+Stable tag: 1.5
 License: GPLv2 or later
 
 A BuddyPress tool for viewing messages
@@ -23,7 +23,7 @@ This tool allows site administrators to review the messages of any member. They 
 
 It provides a wp-admin screen available via Tools > BP Messages.
 
-You can allow members to block each other by using BuddyBlock: http://www.philopress.com/products/buddyblock/
+You can allow members to block each other by using [BuddyBlock](https://www.philopress.com/products/buddyblock/ "BuddyBlock")
 
 
 == Installation ==
@@ -41,6 +41,18 @@ You can allow members to block each other by using BuddyBlock: http://www.philop
 
 == Changelog ==
 
+= 1.5 =
+* bug fix re pagination
+
+
+= 1.4 =
+* Add default display of last 10 messages
+* Added language file
+* Tested with WP 5.1.1
+
+= 1.3 =
+* Tested with WP 4.7 and BP 2.7.2
+
 = 1.2 =
 * Allows selection of messages from Inbox or Sent box instead of only showing Inbox.
 
@@ -52,6 +64,14 @@ You can allow members to block each other by using BuddyBlock: http://www.philop
 
 
 == Upgrade Notice ==
+
+= 1.4 =
+* Add default display of last 10 messages
+* Added language file
+* Tested with WP 5.1.1
+
+= 1.3 =
+* Tested with WP 4.7 and BP 2.7.2
 
 = 1.2 =
 * Allows selection of messages from Inbox or Sent box instead of only showing Inbox.

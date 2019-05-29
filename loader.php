@@ -1,16 +1,16 @@
 <?php
 /*
 Plugin Name: BP Messages Tool
-Plugin URI: http://www.philopress.com
+Plugin URI: https://www.philopress.com
 Description: View Messages for any BuddyPress member via wp-admin screen Tools > BP Messages
-Version: 1.2
+Version: 1.5
 Author: PhiloPress
-Author URI: http://www.philopress.com/contact/
+Author URI: https://www.philopress.com/contact/
 Text Domain: bpmt
 Domain Path: /languages/
 */
 
-// Exit if accessed directly
+// Exit if accessed directly  
 if ( !defined( 'ABSPATH' ) ) exit;
 
 
@@ -23,13 +23,13 @@ add_action('plugins_loaded', 'bpmt_bp_check', 999);
 
 function bpmt_install_buddypress_notice() {
 	echo '<div id="message" class="error fade"><p style="line-height: 150%">';
-	_e('<strong>BP Messages Tool</strong></a> requires the BuddyPress plugin. Please <a href="http://buddypress.org/download">install BuddyPress</a> first, or <a href="plugins.php">deactivate BP Messages Tool</a>.');
+	_e('<strong>BP Messages Tool</strong></a> requires the BuddyPress plugin. Please <a href="https://buddypress.org/download">install BuddyPress</a> first, or <a href="plugins.php">deactivate BP Messages Tool</a>.');
 	echo '</p></div>';
 }
 
 
 function bpmt_init() {
-	
+
 	if( is_admin() ) {
 
 		load_plugin_textdomain( 'bpmt', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
