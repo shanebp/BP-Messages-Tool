@@ -19,6 +19,7 @@ if( isset( $_GET['mpage'] ) )
 
 $bpmt_get_member .= '&box=' . $bpmt_user_data->box;
 
+$alter = false;
 
 ?>
 
@@ -36,26 +37,49 @@ $bpmt_get_member .= '&box=' . $bpmt_user_data->box;
 
 	</div><!-- .pagination -->
 
-	<br/>
+	<br>
 
-	<table id="message-threads" cellspacing="15">
 
-			<tr>
-				<td style="width:20%;vertical-align:top;"><strong><?php _e( 'Participants / Meta', 'bpmt' ); ?></strong></td>
-				<td style="width:70%;vertical-align:top;"><strong><?php _e( 'Threads', 'bpmt' ); ?></strong></td>
+	<form action="<?php echo bpmt_view_delete_back_link('bulk-delete'); ?>" method="post" id="messages-bulk-management">
+
+		<table id="message-threads" class="widefat fixed" cellspacing="15">
+
+			<tr style="background-color:#ccc">
+				<td style="width:5%;vertical-align:top;" class="thread-checkbox bulk-select-all"><input id="select-all-messages" type="checkbox"></td>
+				<td style="width:25%;vertical-align:top;"><strong><?php _e( 'Participants / Meta', 'bpmt' ); ?></strong></td>
 				<td style="width:10%;vertical-align:top;"><strong><?php _e( 'Delete', 'bpmt' ); ?></strong></td>
+				<td style="width:60%;vertical-align:top;"><strong><?php _e( 'Threads', 'bpmt' ); ?></strong></td>
 			</tr>
 
 			<?php while ( bp_message_threads() ) : bp_message_thread(); ?>
 
-				<tr id="m-<?php bp_message_thread_id(); ?>" class="<?php bp_message_css_class(); ?><?php if ( bp_message_thread_has_unread() ) : ?> unread<?php else: ?> read<?php endif; ?>">
+				<?php
+
+					$class = ( $alter ? 'class="alternate"' : '' );
+
+					$alter = ! $alter;
+				?>
+
+				<tr id="m-<?php bp_message_thread_id(); ?>" <?php echo $class; ?> <?php if ( bp_message_thread_has_unread() ) : ?> unread<?php else: ?> read<?php endif; ?>">
+
+					<td style="vertical-align:top;">
+						<p>
+						<label for="bp-message-thread-<?php bp_message_thread_id(); ?>"><input type="checkbox" name="message_ids[]" id="bp-message-thread-<?php bp_message_thread_id(); ?>" class="message-check" value="<?php bp_message_thread_id(); ?>" /></label>
+						</p>
+					</td>
 
 					<td style="width:20%;vertical-align:top;">
 						<p>
 						<?php bp_message_thread_to(); ?>
-						<br/>
+						<br>
 						<?php  _e( 'Message Count: ', 'bpmt' ); echo bp_get_message_thread_total_count(); ?>
-						<br/><?php bp_message_thread_last_post_date_raw(); ?>
+						<br><?php bp_message_thread_last_post_date_raw(); ?>
+						</p>
+					</td>
+
+					<td style="width:10%;vertical-align:top;">
+						<p>
+						<a class="submitdelete" href="<?php echo bpmt_view_delete_back_link('delete'); ?>" onclick="return confirm('<?php _e( "Are you sure you want to Delete this Message Thread?", "bpmt" ); ?>');" title="<?php _e( "Delete Thread", "bpmt" ); ?>"><?php _e( 'Delete', 'bpmt' ); ?></a>
 						</p>
 					</td>
 
@@ -64,18 +88,42 @@ $bpmt_get_member .= '&box=' . $bpmt_user_data->box;
 						<p class="thread-excerpt"><?php echo stripslashes( bp_get_message_thread_content() ); ?></p>
 					</td>
 
-					<td style="width:10%;vertical-align:top;">
-						<p>
-						<a class="submitdelete" href="<?php echo bpmt_view_delete_back_link('delete'); ?>" onclick="return confirm('<?php _e( "Are you sure you want to Delete this Message Thread?", "bpmt" ); ?>');" title="<?php _e( "Delete Thread", "bpmt" ); ?>"><?php _e( 'Delete', 'bpmt' ); ?></a>
-						</p>
-					</td>
 				</tr>
 
 			<?php endwhile; ?>
 
-	</table><!-- #message-threads -->
+			<tr style="background-color:#ccc">
+				<td style="width:5%;vertical-align:top;" class="thread-checkbox bulk-select-all"><input id="select-all-messages-footer" type="checkbox"></td>
+				<td style="width:25%;vertical-align:top;"><strong><?php _e( 'Participants / Meta', 'bpmt' ); ?></strong></td>
+				<td style="width:10%;vertical-align:top;"><strong><?php _e( 'Delete', 'bpmt' ); ?></strong></td>
+				<td style="width:60%;vertical-align:top;"><strong><?php _e( 'Threads', 'bpmt' ); ?></strong></td>
+			</tr>
 
-	<br/>
+
+		</table><!-- #message-threads -->
+
+		<div class="messages-options-nav">
+			<br>
+			<input type="submit" id="messages-bulk-manage" class="button button-primary" value="Delete All Selected Messages"> <em><?php _e( "There is no UnDo for this operation.", "bpmt" ); ?></em>
+		</div><!-- .messages-options-nav -->
+
+		<?php wp_nonce_field( 'messages_bulk_nonce', 'messages_bulk_nonce' ); ?>
+
+	</form>
+
+
+	<script>
+		jQuery(document).ready(function($) {
+			$('#select-all-messages').click(function() {
+				$(':checkbox').prop('checked', this.checked);
+			});
+			$('#select-all-messages-footer').click(function() {
+				$(':checkbox').prop('checked', this.checked);
+			});
+		});
+	</script>
+
+	<br>
 
 	<div class="pagination no-ajax" id="user-pag">
 

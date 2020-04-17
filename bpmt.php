@@ -4,7 +4,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function bpmt_menu() {
 
-	add_submenu_page( 'tools.php', 'BP Messages', 'BP Messages', 'manage_options', 'bp-messages-tool', 'bpmt_screen', '', 23.52 );
+	add_submenu_page( 'tools.php', 'BP Messages', 'BP Messages', 'manage_options', 'bp-messages-tool', 'bpmt_screen', 99 );
 }
 add_action( 'admin_menu', 'bpmt_menu' );
 
@@ -35,6 +35,10 @@ function bpmt_screen() {
 
 				case 'delete-thread':
 					bpmt_delete_thread();
+					break;
+
+				case 'bulk-delete':
+					bpmt_bulk_delete();
 					break;
 
 			}
@@ -83,15 +87,15 @@ function bpmt_form() {
 
 			<?php _e("Enter a Member's login name or user id: ", 'bpmt'); ?>
 
-			<br/><br/>
+			<br><br>
 
 			<input type="text" name="bpmt-user" id="bpmt" maxlength="50" />
 
-			<br/><br/>
+			<br><br>
 
-			<input type="radio" name="bpmt-box" value="inbox" checked><?php _e("Inbox", 'bpmt'); ?> &nbsp; <input type="radio" name="bpmt-box" value="sentbox"><?php _e("Sent", 'bpmt'); ?><br/><br/>
+			<input type="radio" name="bpmt-box" value="inbox" checked><?php _e("Inbox", 'bpmt'); ?> &nbsp; <input type="radio" name="bpmt-box" value="sentbox"><?php _e("Sent", 'bpmt'); ?><br><br>
 
-			<input type="submit" name="bpmt-submit"  id=""bpmt-submit" class="button button-primary" value="<?php _e('Go', 'bpmt'); ?>">
+			<input type="submit" name="bpmt-submit"  id=""bpmt-submit" class="button button-primary" value="<?php _e('Get Messages', 'bpmt'); ?>">
 
 		</form>
 	</p>
@@ -257,6 +261,89 @@ function bpmt_delete_thread() {
 	bpmt_get_member();
 }
 
+function bpmt_bulk_delete() {
+	global $wpdb;
+
+	if( ! is_super_admin() )
+		return false;
+
+	if( ! check_admin_referer( 'bpmt_bulk_delete' ) )
+		return false;
+
+	$user_id = intval( $_GET['user_id'] );
+
+	//echo '<pre>'; var_dump( $_POST["message_ids"] ); echo '</pre>';
+
+	$bulk_thread_ids = $_POST["message_ids"];
+
+	$bp = buddypress();
+
+	$success = 0;
+	$failure = 0;
+
+
+	foreach ( $bulk_thread_ids AS $thread_id ) {
+
+		$thread_id = intval( $thread_id );
+
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 1 WHERE thread_id = %d", $thread_id ) );
+
+		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) );
+
+		$recipients = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d AND is_deleted = 0", $thread_id ) );
+
+		if ( empty( $recipients ) ) {
+
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) );
+
+			foreach ( $message_ids as $message_id ) {
+
+				bp_messages_delete_meta( $message_id );
+
+			}
+
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ) );
+
+			$success++;
+
+		} else {
+			$failure++;
+		}
+
+	}
+
+	if ( $success > 0 ) {
+
+		if ( $success == 1 ) {
+
+			_e("<div class='updated below-h2'> 1 Message Thread was deleted.</div>", 'bpmt');
+
+		} else {
+
+			printf( __( "<div class='updated below-h2'> %s Message Threads were deleted.</div>", 'bpmt' ), $success );
+
+		}
+
+	}
+
+	if ( $failure > 0 ) {
+
+		if ( $failure == 1 ) {
+
+			_e("<div class='updated below-h2'>ERROR - There was a problem deleting a Message Thread.</div>", 'bpmt');
+
+		} else {
+
+			printf( __( "<div class='error below-h2'>ERROR - There was a problem deleting 1% Message Threads.</div>", 'bpmt' ), $failure );
+
+		}
+
+	}
+
+
+	bpmt_get_member();
+
+}
 
 function bpmt_get_user_data( $user ) {
 	global $wpdb;
@@ -275,12 +362,35 @@ function bpmt_get_user_data( $user ) {
 
 function bpmt_display_user_info() {
 	global $bpmt_user_data;
+	?>
 
-	echo '<p><span class="highlight">Display Name: ' . $bpmt_user_data->display_name
-	. ' | Login Name: ' . $bpmt_user_data->user_login
-	. ' | ID: ' . $bpmt_user_data->ID
-	. ' | Box: ' . ucfirst( $bpmt_user_data->box )
-	. '</span><p/>';
+	<table id="display-user" cellspacing="10" width="25%">
+
+		<tr>
+			<td align="right"><em>Display Name:</em></td>
+			<td><?php echo $bpmt_user_data->display_name; ?></td>
+		</tr>
+
+		<tr>
+			<td align="right"><em>Login Name:</em></td>
+			<td><?php echo $bpmt_user_data->user_login; ?></td>
+		</tr>
+
+		<tr>
+			<td align="right"><em>ID:</em></td>
+			<td><?php echo $bpmt_user_data->ID; ?></td>
+		</tr>
+
+		<tr>
+			<td align="right"><em>Box:</em></td>
+			<td><?php echo ucfirst( $bpmt_user_data->box ); ?></td>
+		</tr>
+
+	</table>
+
+	<br>
+
+	<?php
 
 }
 
@@ -310,6 +420,10 @@ function bpmt_view_delete_back_link( $type ) {
 			$link = wp_nonce_url( site_url() . '/wp-admin/tools.php?page=bp-messages-tool&action=delete-thread' . $mpage . $user_id . $thread_id . $box, 'bpmt_delete_thread' );
 			break;
 
+		case 'bulk-delete':
+			$link = wp_nonce_url( site_url() . '/wp-admin/tools.php?page=bp-messages-tool&action=bulk-delete' . $mpage . $user_id . $box, 'bpmt_bulk_delete' );
+			break;
+
 		case 'back':
 			$link = site_url() . '/wp-admin/tools.php?page=bp-messages-tool&action=member-threads' . $mpage . $user_id . $box;
 			break;
@@ -317,6 +431,7 @@ function bpmt_view_delete_back_link( $type ) {
 		default:
 			$link = '';
 			break;
+
 	}
 
 	return $link;

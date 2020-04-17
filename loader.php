@@ -3,14 +3,14 @@
 Plugin Name: BP Messages Tool
 Plugin URI: https://www.philopress.com
 Description: View Messages for any BuddyPress member via wp-admin screen Tools > BP Messages
-Version: 1.5
+Version: 2.1
 Author: PhiloPress
-Author URI: https://www.philopress.com/contact/
+Author URI: https://www.philopress.com/
 Text Domain: bpmt
 Domain Path: /languages/
 */
 
-// Exit if accessed directly  
+// Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
 

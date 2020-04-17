@@ -3,10 +3,10 @@ Contributors: shanebp
 Donate link: https://www.philopress.com/donate/
 Tags: buddypress, messages
 Author URI: https://philopress.com/contact/
-Plugin URI: https://philopress.com/products/
+Plugin URI: https://philopress.com/
 Requires at least: WP 4.0
-Tested up to: WP 5.1
-Stable tag: 1.5
+Tested up to: 5.4
+Stable tag: 2.1
 License: GPLv2 or later
 
 A BuddyPress tool for viewing messages
@@ -20,6 +20,8 @@ By default, nobody can read a BuddyPress private message unless it was sent or r
 Occasionally, there is a need to respond to member complaints about another member harassing them via abusive messages.
 
 This tool allows site administrators to review the messages of any member. They can also delete Message Threads.
+
+NOTE: There is no UNDO for delete operations.
 
 It provides a wp-admin screen available via Tools > BP Messages.
 
@@ -36,14 +38,20 @@ You can allow members to block each other by using [BuddyBlock](https://www.phil
 
 == Frequently Asked Questions ==
 
-* none yet
+= Can messages be restored after they are deleted? =
+ NO !
 
 
 == Changelog ==
 
+= 2.1 =
+* fix sumbmenu page bug for WP 5.3
+
+= 2.0 =
+* add support for bulk deletion
+
 = 1.5 =
 * bug fix re pagination
-
 
 = 1.4 =
 * Add default display of last 10 messages
@@ -64,6 +72,13 @@ You can allow members to block each other by using [BuddyBlock](https://www.phil
 
 
 == Upgrade Notice ==
+
+= 2.1 =
+* fix sumbmenu page bug for WP 5.3
+
+= 2.0 =
+* 6/5/2019
+* add support for bulk deletion
 
 = 1.4 =
 * Add default display of last 10 messages
